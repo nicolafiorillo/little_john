@@ -9,7 +9,9 @@ COPY . .
 RUN mix do local.hex --force, local.rebar --force
 
 RUN rm -Rf _build && \
-    MIX_ENV=prod mix do deps.get, deps.compile, compile, release
+    MIX_ENV=test mix do deps.get, deps.compile, compile, test
+
+RUN MIX_ENV=prod mix do deps.get, deps.compile, compile, release
 
 FROM bitwalker/alpine-erlang:24.0.5
 
