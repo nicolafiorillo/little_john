@@ -14,7 +14,7 @@ defmodule Router do
   plug(:dispatch)
 
   get "/tickers" do
-    portfolio = Business.get_portfolio(conn.assigns[:key])
+    portfolio = Business.get_portfolio(conn.assigns[:token])
     send_resp(conn, Status.code(:ok), Jason.encode!(portfolio))
   end
 
@@ -34,9 +34,9 @@ defmodule Router do
   end
 
   defp auth(conn, _opts) do
-    with {key, _pass} <- Plug.BasicAuth.parse_basic_auth(conn),
-         true <- LittleJohn.Business.user_exists?(key) do
-      assign(conn, :key, key)
+    with ["Basic " <> token] <- get_req_header(conn, "authorization"),
+         true <- LittleJohn.Business.user_exists?(token) do
+      assign(conn, :token, token)
     else
       _ -> conn |> Plug.BasicAuth.request_basic_auth() |> halt()
     end

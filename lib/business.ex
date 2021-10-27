@@ -12,7 +12,7 @@ defmodule LittleJohn.Business do
     end
   end
 
-  def get_portfolio(user_key) do
-    Data.portfolio(user_key)
+  def get_portfolio(token) do
+    Data.portfolio(token)
   end
 end
